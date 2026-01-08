@@ -13,6 +13,9 @@ app.use('/api/auth',route);
 const db = require('./config/db');
 require('dotenv').config();
 const port = process.env.PORT || 5000;
+console.log(`http://localhost:3000/api/auth/mail`);
+
+
 
 app.get('/',(req,res)=>{
     res.send(`Server is running on port ${port}`);

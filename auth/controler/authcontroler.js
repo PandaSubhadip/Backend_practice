@@ -1,6 +1,7 @@
 const model = require('../model/usermodel');
 const bcrypt = require('bcryptjs');
 const jwt = require ('jsonwebtoken');
+const transporter = require('../Service/mail');
 
 // Additional authentication controller logic can be added here in the future
 const signup =async(req,res)=>{
@@ -59,4 +60,29 @@ const login = async(req,res)=>{
       
     }
 }
-module.exports = {signup,login};
+
+   const Mailsend = async (req, res) => {
+    try {
+        const { to, subject, text } = req.body;
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to,
+            subject,
+            text
+        };
+
+          await transporter.sendMail(mailOptions);
+        res.status(201).json({
+            message: "Mail sent  successfully",
+        })
+    }
+   
+     catch (error) {
+        res.status(500).json({ message: 'Server Error' });
+        console.error(error);
+    }
+};
+
+
+
+module.exports = {signup,login,Mailsend};
