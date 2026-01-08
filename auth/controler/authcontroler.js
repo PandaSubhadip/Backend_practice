@@ -1,4 +1,6 @@
 const model = require('../model/usermodel');
+const fs = require('fs');
+const path = require('path');
 const bcrypt = require('bcryptjs');
 const jwt = require ('jsonwebtoken');
 const transporter = require('../Service/mail');
@@ -63,12 +65,20 @@ const login = async(req,res)=>{
 
    const Mailsend = async (req, res) => {
     try {
-        const { to, subject, text } = req.body;
+        const { to, subject,name,otp } = req.body;
+        const templatePath = path.join(__dirname, './emailTamplate/otp.html');
+        let html = fs.readFileSync(templatePath, 'utf-8');
+
+        html = html
+            .replace('{{name}}', name)
+            .replace('{{otp}}', otp)
+          
         const mailOptions = {
-            from: process.env.EMAIL_USER,
+            from: `codehapend any time <${process.env.EMAIL_USER}>`,
             to,
             subject,
-            text
+            html,
+            otp
         };
 
           await transporter.sendMail(mailOptions);
